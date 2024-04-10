@@ -10,36 +10,90 @@ def put_left(d, v):
   acquire(?d->lock)
 
   while d->elems == d->size:
-    wait(?d->put_cond,?d->lock)
-  
+    wait(?d->put_cond, ?d->lock)
   
   if d->elems > 0:
     d->left = ((d->left)-1) % d->size
   d->bdeque[d->left] = v
   d->elems +=1
+
   notify(?d->get_cond)
   notifyAll(?d->peek_cond)
+
+  release(?d->lock)
+
+# put right(d, v): d points to a bdeque and v is some value. Put v at the right-end of the bdeque. Does not return a value. Should block if the bdeque is full.
+def put_right(d, v):
+  acquire(?d->lock)
+
+  while d->elems == d->size:
+    wait(?d->put_cond, ?d->lock)
+  
+  if d->elems > 0:
+    d->right = ((d->right)+1) % d->size
+  d->bdeque[d->right] = v
+  d->elems +=1
+
+  notify(?d->get_cond)
+  notifyAll(?d->peek_cond)
+
+  release(?d->lock)
+
+# get left(d): d points to a bdeque. If the bdeque is empty, the operation should wait. Otherwise it should remove and return the value at the left-end of the bdeque.
+def get_left(d) returns val:
+  acquire(?d->lock)
+
+  while d->elems == 0:
+    wait(?d->get_cond, ?d->lock)
+
+  val = d->bdeque[d->left]
+  d->bdeque[d->left] = None
+  d->elems -= 1
+  if d->elems > 0:
+    d->left = ((d->left)+1) % d->size
+
+  notify(?d->put_cond)
+
+  release(?d->lock)
+
+# get right(d): d points to a bdeque. If the bdeque is empty, the operation should wait. Otherwise it should remove and return the value at the right-end of the bdeque.
+def get_right(d) returns val:
+  acquire(?d->lock)
+
+  while d->elems == 0:
+    wait(?d->get_cond, ?d->lock)
+
+  val = d->bdeque[d->right]
+  d->bdeque[d->right] = None
+  d->elems -= 1
+  if d->elems > 0:
+    d->right = ((d->right)-1) % d->size
+
+  notify(?d->put_cond)
+
   release(?d->lock)
   
 
-
-
-# put right(d, v): d points to a bdeque and v is some value. Put v at the right-end of the bdeque. Does not return a value. Should block if the bdeque is full.
-#def put_right(d, v):
-  
-
-# get left(d): d points to a bdeque. If the bdeque is empty, the operation should wait. Otherwise it should remove and return the value at the left-end of the bdeque.
-#def get_left(d) returns val:
-  
-
-# get right(d): d points to a bdeque. If the bdeque is empty, the operation should wait. Otherwise it should remove and return the value at the right-end of the bdeque.
-#def get_right(d) returns val:
-  
-
 # peek left(d): d points to a bdeque. If the bdeque is empty, the operation should wait. Otherwise it should return the value at the left-end of the bdeque.
-#def peek_left(d) returns val:
+def peek_left(d) returns val:
+  acquire(?d->lock)
+  
+  while d->elems == 0:
+    wait(?d->peek_cond, ?d->lock)
+
+  val = d->bdeque[d->left]
+
+  release(?d->lock)
   
 
 # peek right(d): d points to a bdeque. If the bdeque is empty, the operation should wait. Otherwise it should return the value at the right-end of the bdeque.
-#def peek_right(d) returns val:
+def peek_right(d) returns val:
+  acquire(?d->lock)
+  
+  while d->elems == 0:
+    wait(?d->peek_cond, ?d->lock)
+
+  val = d->bdeque[d->right]
+
+  release(?d->lock)
   
