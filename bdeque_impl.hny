@@ -1,37 +1,30 @@
+import synch
+
 # Bdeque(n): returns the initial value of an empty bdeque with at most n elements.
 def Bdeque(n) returns empty:
-  empty = {.bdeque: [], .size: n}
+  empty = {.bdeque: [None,] * n, .lock: Lock(), .put_cond: Condition(), .get_cond: Condition(), .left: 0, .right: 0}
 
 # put left(d, v): d points to a bdeque and v is some value. Put v at the left-end of the bdeque. Does not return a value. Should block if the bdeque is full.
 def put_left(d, v):
-  atomically when len(d->bdeque) < d->size:
-    d->bdeque = [v,] + d->bdeque
+  acquire(?d->lock)
+
 
 # put right(d, v): d points to a bdeque and v is some value. Put v at the right-end of the bdeque. Does not return a value. Should block if the bdeque is full.
-def put_right(d, v):
-  atomically when len(d->entries) < d->size:
-    d->bdeque = d->bdeque + [v,]
+#def put_right(d, v):
+  
 
 # get left(d): d points to a bdeque. If the bdeque is empty, the operation should wait. Otherwise it should remove and return the value at the left-end of the bdeque.
-def get_left(d) returns val:
-  atomically when len(d->bdeque) > 0:
-    val = (d->bdeque)[0]
-    del (d->bdeque)[0]
+#def get_left(d) returns val:
+  
 
 # get right(d): d points to a bdeque. If the bdeque is empty, the operation should wait. Otherwise it should remove and return the value at the right-end of the bdeque.
-def get_right(d) returns val:
-  atomically when len(d->bdeque) > 0:
-    let last = len(d->bdeque) - 1: 
-      val = (d->bdeque)[last]
-      del (d->bdeque)[last]
+#def get_right(d) returns val:
+  
 
 # peek left(d): d points to a bdeque. If the bdeque is empty, the operation should wait. Otherwise it should return the value at the left-end of the bdeque.
-def peek_left(d) returns val:
-  atomically when len(d->bdeque) > 0:
-    val = (d->bdeque)[0]
+#def peek_left(d) returns val:
+  
 
 # peek right(d): d points to a bdeque. If the bdeque is empty, the operation should wait. Otherwise it should return the value at the right-end of the bdeque.
-def peek_right(d) returns val:
-  atomically when len(d->bdeque) > 0:
-    let last = len(d->bdeque) - 1: 
-      val = (d->bdeque)[last]
+#def peek_right(d) returns val:
+  
