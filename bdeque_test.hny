@@ -1,13 +1,14 @@
 import bdeque
 
+const SIZE = 2
 const N_PUT_LEFT = 1
-const N_PUT_RIGHT = 1
+const N_PUT_RIGHT = 2
 const N_GET_LEFT = 1
 const N_GET_RIGHT = 1
-const N_PEEK_LEFT = 1
+const N_PEEK_LEFT = 0
 const N_PEEK_RIGHT = 1
 
-d = bdeque.Bdeque()
+d = bdeque.Bdeque(SIZE)
 
 def put_left_test(self):
   print("call put_left", self)

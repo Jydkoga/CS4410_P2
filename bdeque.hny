@@ -9,7 +9,7 @@ def put_left(d, v):
 
 # put right(d, v): d points to a bdeque and v is some value. Put v at the right-end of the bdeque. Does not return a value. Should block if the bdeque is full.
 def put_right(d, v):
-  atomically when len(d->entries) < d->size:
+  atomically when len(d->bdeque) < d->size:
     d->bdeque = d->bdeque + [v,]
 
 # get left(d): d points to a bdeque. If the bdeque is empty, the operation should wait. Otherwise it should remove and return the value at the left-end of the bdeque.
